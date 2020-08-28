@@ -6,15 +6,19 @@ public class JwtResponse {
 	private String token;
 	private String type = "Bearer";
 	private Long id;
+	private String firstname;
+	private String lastname;
 	private String username;
 	private String email;
 	private List<String> roles;
 
-	public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+	public JwtResponse(String accessToken, Long id,String firstname, String lastname, String username, String email, List<String> roles) {
 		this.token = accessToken;
 		this.id = id;
 		this.username = username;
 		this.email = email;
+		this.firstname = firstname;
+		this.lastname = lastname;
 		this.roles = roles;
 	}
 
@@ -58,7 +62,26 @@ public class JwtResponse {
 		this.username = username;
 	}
 
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
 	public List<String> getRoles() {
 		return roles;
 	}
+	
+	
 }
+

@@ -2,12 +2,14 @@ package com.ensah.reservation.controller;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +17,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ensah.reservation.dao.RoleRepository;
 import com.ensah.reservation.dao.UserRepository;
 import com.ensah.reservation.entity.ERole;
+import com.ensah.reservation.entity.Employe;
 import com.ensah.reservation.entity.Role;
 import com.ensah.reservation.entity.User;
 import com.ensah.reservation.jwt.JwtUtils;
@@ -68,10 +73,33 @@ public class AuthController {
 
 		return ResponseEntity.ok(new JwtResponse(jwt, 
 												 userDetails.getId(), 
+												 userDetails.getFirstname(),
+												 userDetails.getLastname(),
 												 userDetails.getUsername(), 
 												 userDetails.getEmail(), 
 												 roles));
 	}
+	 @PutMapping("/user/{id}")
+	  public ResponseEntity<?> updateCustomer(@PathVariable("id") long id, @Valid @RequestBody SignupRequest signUpRequest) {
+		 
+
+	    System.out.println("Update User with ID = " + id + "...");
+	 
+	    Optional<User> userData = userRepository.findById(id);
+	 
+	    if (userData.isPresent()) {
+	       User _user = userData.get();
+	      _user .setFirstname(signUpRequest.getFirstname());
+	      _user .setLastname(signUpRequest.getLastname());
+	      _user .setUsername(signUpRequest.getUsername());
+	      _user .setEmail(signUpRequest.getEmail());
+	      _user .setPassword(encoder.encode(signUpRequest.getPassword()));
+	     
+	      return new ResponseEntity<>(userRepository.save(_user ), HttpStatus.OK);
+	    } else {
+	      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    }
+	  }
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
@@ -88,7 +116,7 @@ public class AuthController {
 		}
 
 		// Create new user's account
-		User user = new User(signUpRequest.getUsername(), 
+		User user = new User(signUpRequest.getFirstname(),signUpRequest.getLastname(),signUpRequest.getUsername(), 
 							 signUpRequest.getEmail(),
 							 encoder.encode(signUpRequest.getPassword()));
 

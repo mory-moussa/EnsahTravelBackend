@@ -18,7 +18,15 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+    
+	@NotBlank
+	@Size(max = 20)
+	private String firstname; 
+	
+	@NotBlank
+	@Size(max = 20)
+	private String lastname;
+	
 	@NotBlank
 	@Size(max = 20)
 	private String username;
@@ -41,10 +49,12 @@ public class User {
 	public User() {
 	}
 
-	public User(String username, String email, String password) {
+	public User(String firstname,String lastname,String username, String email, String password) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
+		this.firstname = firstname;
+		this.lastname = lastname;
 	}
 
 	public Long getId() {
@@ -86,4 +96,22 @@ public class User {
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+	
+	
 }

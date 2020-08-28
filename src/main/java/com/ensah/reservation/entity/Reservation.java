@@ -22,7 +22,7 @@ public class Reservation {
 	@Column(name = "depart",nullable = false)
 	private String depart;
 	@Column(name = "prix",nullable = false)
-	private String prix;
+	private int  prix;
 	@Column(name = "place",nullable = false)
 	private String place;
 	@Column(name = "villeDepart",nullable = false)
@@ -40,8 +40,17 @@ public class Reservation {
 	
 	public Reservation() {
 	}
-	public Reservation(String compagnie, String depart, String prix, String place, String villeDepart,
-			String villeArrivee, String date, String nom, String email, String mobile) {
+	public Reservation(
+			String compagnie, 
+			String depart,
+			int prix, 
+			String place,
+			String villeDepart,
+			String villeArrivee, 
+			String date, 
+			String nom, 
+			String email, 
+			String mobile) {
 		super();
 		this.compagnie = compagnie;
 		this.depart = depart;
@@ -75,11 +84,11 @@ public class Reservation {
 		this.depart = depart;
 	}
 
-	public String getPrix() {
+	public int getPrix() {
 		return prix;
 	}
 
-	public void setPrix(String prix) {
+	public void setPrix(int prix) {
 		this.prix = prix;
 	}
 

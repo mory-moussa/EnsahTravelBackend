@@ -21,8 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ensah.reservation.dao.EmployeRepository;
 import com.ensah.reservation.dao.ReservationRepository;
+import com.ensah.reservation.dao.UserRepository;
+import com.ensah.reservation.dao.VolRepository;
 import com.ensah.reservation.entity.Employe;
 import com.ensah.reservation.entity.Reservation;
+import com.ensah.reservation.entity.User;
+import com.ensah.reservation.entity.Vol;
+import com.ensah.reservation.request.VolRequest;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -32,7 +37,10 @@ public class TestController {
 	 EmployeRepository repository;
 	  @Autowired
 	  ReservationRepository repository1;
-	
+		@Autowired
+		UserRepository userRepository;
+		@Autowired
+		VolRepository volRepository;
 	@GetMapping("/all")
 	public String allAccess() {
 		return "Public Content.";
@@ -78,13 +86,12 @@ public class TestController {
 	    return ResponseEntity.ok().body(employe);
 	  }
 	  @GetMapping("/employes")
-	  public List<Employe> getAllEmployes() {
-	    System.out.println("Get all employes...");
+	  public List<User> getAllEmployes() {
+	    System.out.println("Get all users...");
 	 
-	    List<Employe> employes = new ArrayList<>();
-	    repository.findAll().forEach(employes::add);
-	   System.out.println();
-	    return employes;
+	    List<User> users = new ArrayList<>();
+	    userRepository.findAll().forEach(users::add);
+	    return users;
 	  }
 	  @GetMapping("/reservations")
 	  public List<Reservation> getAllReservation() {
@@ -93,6 +100,14 @@ public class TestController {
 	    List<Reservation> reservations = new ArrayList<>();
 	    repository1.findAll().forEach(reservations::add);
 	    return reservations;
+	  }
+	  @PostMapping("/vols")
+	  public List<Vol> getAllVol(@RequestBody VolRequest volRequest) {
+	    System.out.println("Get vols...");
+	 
+	    List<Vol> vols = new ArrayList<>();
+	    volRepository.findVols(volRequest.getVille_depart(),volRequest.getVille_arrivee()).forEach(vols::add);
+	    return vols;
 	  }
 	 
 	  @PostMapping(value = "/employes/create")
@@ -104,8 +119,13 @@ public class TestController {
 	  @PostMapping(value = "/reservations/create")
 	  public Reservation postRervation(@RequestBody Reservation res) {
 	  System.out.println("reservation created .....");
-	   Reservation _reservation = repository1.save(new Reservation(res.getCompagnie(),res.getDepart(),
-			   res.getPrix(),res.getPlace(),res.getVilleDepart(),res.getVilleArrivee(),res.getDate(),res.getNom(),res.getEmail(),res.getMobile()));
+	   Reservation _reservation = repository1.save(new Reservation(
+			   "RAM","ddk",
+			  122,"D4","Casa",
+			   "Dakar","14/02/0855",
+			   "camara mory",
+			   "mmcamara30@gmail.com",
+			   "0644500805"));
 	    return _reservation;
 	  }
 	 
@@ -113,7 +133,7 @@ public class TestController {
 	  public ResponseEntity<String> deleteEmploye(@PathVariable("id") long id) {
 	    System.out.println("Delete Employe with ID = " + id + "...");
 	 
-	    repository.deleteById(id);
+	    userRepository.deleteById(id);
 	 
 	    return new ResponseEntity<>("Employe has been deleted!", HttpStatus.OK);
 	  }
